@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PDF Text Lens</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main>
+    <header><span class="eyebrow">LOCAL PDF READER</span><h1>PDF Text Lens</h1><p>Extract selectable text and scan pages for printed or handwritten writing.</p></header>
+    <section class="panel">
+      <form id="extract-form">
+        <label class="drop-zone" for="pdf"><input id="pdf" name="pdf" type="file" accept="application/pdf,.pdf" required><span class="icon">⇧</span><strong>Choose a PDF</strong><small>or drag it here · maximum 50 MB</small></label>
+        <div class="options">
+          <label class="toggle"><input id="ocr" type="checkbox" checked {% if not dependencies.ocr_ready %}disabled{% endif %}><span></span>Scan pages with OCR</label>
+          <label>OCR language <input id="language" type="text" value="eng" maxlength="16" aria-label="OCR language"></label>
+          <button type="submit">Extract text</button>
+        </div>
+      </form>
+      {% if not dependencies.ocr_ready %}<aside><strong>OCR setup required:</strong> install packages with <code>pip install -r requirements.txt</code>, then install <a href="https://github.com/UB-Mannheim/tesseract/wiki" target="_blank" rel="noreferrer">Tesseract OCR</a> and restart the app. Selectable PDF text works after the Python packages are installed.</aside>{% endif %}
+    </section>
+    <section id="status" aria-live="polite"></section>
+    <section id="results" hidden><div class="result-head"><div><span class="eyebrow">EXTRACTED TEXT</span><h2 id="summary"></h2></div><button id="download" class="secondary">Download .txt</button></div><textarea id="output" spellcheck="false" aria-label="Extracted text"></textarea><div id="pages"></div><p class="note">Handwriting accuracy depends on the writing quality, scan resolution, and language. Review the output against the original PDF for important content.</p></section>
+  </main>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
